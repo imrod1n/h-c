@@ -8,8 +8,12 @@
 </head>
 <body class="d-flex h-100 w-100">
     <div class="container m-auto col-md-4">
-        <h1 class="mb-3 fw-normal m-1 p-0">Тут должен быть норм профиль, но мне щас пофиг</h1>
-        <h2 class="m-1"><a href="/">На главную</a></h2>
+    <div id="messages"></div>
+    <form>
+        <input type="text" id="message" autocomplete="off">
+        <button>Send</button>
+    </form>
     </div>
+    <script src="client/pages/script.js"></script>
 </body>
 </html>

@@ -15,25 +15,38 @@ $dotenv->load();
     $sql = 'SELECT * FROM users WHERE login = ? AND password = ?';
     $query = $conn->prepare($sql);
     $query->execute([$login, $password]);
-    
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    $name = $result['name'];
+    $role = $result['role'];
+
     // Здесь должна быть проверка учетных данных, замените код ниже вашей проверкой!
-    if ($query->rowCount() !== 0) {  
-        // Если данные верны, создаем payload для токена
-        $payload = array(
-            'iss' => 'example.com',   // issuer
-            'sub' => $login,       // subject (например, имя пользователя)
-            'iat' => time(),          // issued at (текущее время)
-            'exp' => time() + 3600 * 24    // expires in one day
-        );
-        
-        // Генерируем JWT
-        $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
-        
-        setcookie("token", $token, time() + 3600 * 24, "/");
+    if ($query->rowCount() !== 0) { 
+        setcookie('token', '', -1, '/');
+        setcookie('name', '', -1, '/'); 
+        setcookie('login', '', -1, '/');
+        setcookie('role', '', -1, '/'); 
+        if($result['ban'] == 0){
+            // Если данные верны, создаем payload для токена
+            $payload = array(
+                'iss' => 'h-c.l',   // issuer
+                'sub' => $login,       // subject (например, имя пользователя)
+                'iat' => time(),          // issued at (текущее время)
+                'exp' => time() + 3600 * 24    // expires in one day
+            );
 
+            // Генерируем JWT
+            $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
 
-        header("Location: /");
+            setcookie("token", $token, time() + 3600 * 24, "/");
+            setcookie("name", $name, time() + 3600 * 24, "/");
+            setcookie("role", $role, time() + 3600 * 24, "/");
+            setcookie("login", $login, time() + 3600 * 24, "/");
 
+            header("Location: /");
+        }else {
+        http_response_code(401);
+        header('Location: /error');
+    }
     } else {
         http_response_code(401);
         header('Location: /error');
