@@ -6,6 +6,7 @@ use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 
 require_once __DIR__ . '../../vendor/autoload.php';
+require "helpers/database.php";
 
 class Chat implements MessageComponentInterface {
     protected $clients;
@@ -14,15 +15,15 @@ class Chat implements MessageComponentInterface {
         $this->clients = new \SplObjectStorage;
     }
 
-    public function onOpen(ConnectionInterface $conn) {
-        $this->clients->attach($conn);
-        echo "Новое соединение: ({$conn->resourceId})\n";
-        $conn->send("Введите ваше имя:");
+    public function onOpen(ConnectionInterface $connt) {
+        $this->clients->attach($connt);
+        echo "Новое соединение: ({$connt->resourceId})\n";
+        $connt->send("Введите ваше имя:");
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
       if (!isset($from->username)) {
-          $from->username = $msg;
+          $from->username = $_COOKIE['name'];
           $from->send("Добро пожаловать, $msg!");
           return;
       }
@@ -37,10 +38,10 @@ class Chat implements MessageComponentInterface {
       }
   }
 
-    public function onClose(ConnectionInterface $conn) {
+    public function onClose(ConnectionInterface $connt) {
         // Удаляем соединение из списка клиентов
-        $this->clients->detach($conn);
-        echo "Соединение закрыто: ({$conn->resourceId})\n";
+        $this->clients->detach($connt);
+        echo "Соединение закрыто: ({$connt->resourceId})\n";
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {
@@ -55,7 +56,7 @@ $server = IoServer::factory(
         new WsServer(
             new Chat()
         )
-    ),
+    ),8080
 );
 
 echo "Сервер запущен на порту 8080\n";

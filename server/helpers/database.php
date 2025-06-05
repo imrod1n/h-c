@@ -1,5 +1,5 @@
 <?php
-$dbhost = '127.0.0.1';
+$dbhost = 'h-chat.l';
 $dbport = '3306';
 $dbname = 'H-chat';
 $dsn = "mysql:host={$dbhost};port={$dbport};dbname={$dbname}";

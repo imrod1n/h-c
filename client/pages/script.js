@@ -1,4 +1,4 @@
-        const socket = new WebSocket('ws://localhost');
+        const socket = new WebSocket('ws://localhost:8080');
 
         socket.addEventListener('open', function(event) {
             console.log('Connected to server.');
@@ -22,4 +22,3 @@
 
             input.value = '';
         });
-		
