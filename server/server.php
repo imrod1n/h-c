@@ -6,35 +6,31 @@ use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 
 require_once __DIR__ . '../../vendor/autoload.php';
-require "helpers/database.php";
 
 class Chat implements MessageComponentInterface {
     protected $clients;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
+        
     }
 
     public function onOpen(ConnectionInterface $connt) {
         $this->clients->attach($connt);
         echo "Новое соединение: ({$connt->resourceId})\n";
-        $connt->send("Введите ваше имя:");
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
-      if (!isset($from->username)) {
-          $from->username = $_COOKIE['name'];
-          $from->send("Добро пожаловать, $msg!");
-          return;
-      }
-  
+            $mseg = json_decode($msg, true);
+            $cont = $mseg['content']; $send = $mseg['sender']; $chat = $mseg['chat']; 
+            require "helpers/database.php";
+            $stmt = $conn->prepare("INSERT INTO messages (content, sender, chat) VALUES (?,?,?)");
+            $stmt->execute([$cont, $send, $chat]);
+            
+            // Логирование результата вставки
+            echo "Сообщение успешно сохранено в базе данных.\n";
       foreach ($this->clients as $client) {
-          if ($client !== $from) {
-              $client->send("{$from->username}: $msg");
-          }
-          else{
-              $client->send("Вы: $msg");
-          }
+              $client->send($msg);
       }
   }
 

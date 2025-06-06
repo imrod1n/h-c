@@ -14,11 +14,15 @@ $router->addRoute("/search", "/search.php");
 $router->addRoute("/ban", "/ban.php");
 $router->addRoute("/admin", "/admin.php");
 $router->addRoute("/chat", "/chat.php");
+$router->addRoute("/logout", "/logout.php");
+$router->addRoute("/newGroup", "/newGroup.html");
+$router->addRoute("/group", "/groupChat.php");
+$router->addRoute("/chats", "/chats.php");
 
-if($url == ""){
+if($url == "" or $url == "chat" or $url == "profile"){
     require "server/checkToken.php";
     if($valid == true){
-        $router->route("/profile");
+        $router->route('/'.$url);
     }else{
         $router->route("/auth");
     }

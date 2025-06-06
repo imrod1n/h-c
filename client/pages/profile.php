@@ -17,7 +17,8 @@
             </span>
             <a href="/chats" class="btn btn-primary mt-1">Чаты</a><br>
             <a href="/search" class="btn btn-primary mt-1">Новый собеседник</a><br>
-            <a href="/group" class="btn btn-primary mt-1">Новая группа</a><br>
+            <a href="/newGroup" class="btn btn-primary mt-1">Новая группа</a><br>
+            <a href="/logout" class="btn btn-danger mt-5">Выйти</a><br>
         </div>
     </div>
 </body>

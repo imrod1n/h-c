@@ -24,9 +24,9 @@
             
             require "server/helpers/database.php";
 
-            $sql = 'SELECT * FROM users WHERE login = ? OR name = ?';
+            $sql = 'SELECT * FROM users WHERE login = ? OR name = ? AND login != ?';
             $query = $conn->prepare($sql);
-            $query->execute([$search, $search]);
+            $query->execute([$search, $search, $_COOKIE['login']]);
 
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -39,7 +39,8 @@
                         <p class="card-text">' . $user['login'] . '</p>
                         <p class="card-text">' . $user['role'] . '</p>
                     </span>
-                    <a href="/chat?name=' . $user['login'] . '" class="btn btn-primary m-1">Написать</a>
+                    <a href="/chat?name=' . $user['id'] . '" class="btn btn-primary m-1">Написать</a>
+                    <a href="/addToGroup?name=' . $user['login'] . '" class="btn btn-primary m-1">Написать</a>
                     ';
                     if ($_COOKIE['role'] == 'admin'){
                         echo'<a href="/ban?user=' . $user['login'] . '" class="btn btn-primary m-1">Бан</a>';

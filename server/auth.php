@@ -17,6 +17,7 @@ $dotenv->load();
     $query->execute([$login, $password]);
     $result = $query->fetch(PDO::FETCH_ASSOC);
     $name = $result['name'];
+    $id = $result['id'];
     $role = $result['role'];
 
     // Здесь должна быть проверка учетных данных, замените код ниже вашей проверкой!
@@ -38,6 +39,7 @@ $dotenv->load();
             $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
 
             setcookie("token", $token, time() + 3600 * 24, "/");
+            setcookie("id", $id, time() + 3600 * 24, "/");
             setcookie("name", $name, time() + 3600 * 24, "/");
             setcookie("role", $role, time() + 3600 * 24, "/");
             setcookie("login", $login, time() + 3600 * 24, "/");
